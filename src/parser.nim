@@ -21,7 +21,7 @@ proc parseUser(js: JsonNode; id=""): User =
     tweets: js{"statuses_count"}.getInt,
     likes: js{"favourites_count"}.getInt,
     media: js{"media_count"}.getInt,
-    verified: js{"verified"}.getBool or js{"ext_is_blue_verified"}.getBool,
+    verified: false,
     protected: js{"protected"}.getBool,
     joinDate: js{"created_at"}.getTime
   )
@@ -31,9 +31,6 @@ proc parseUser(js: JsonNode; id=""): User =
 proc parseGraphUser(js: JsonNode): User =
   let user = ? js{"user_results", "result"}
   result = parseUser(user{"legacy"})
-
-  if "is_blue_verified" in user:
-    result.verified = true
 
 proc parseGraphList*(js: JsonNode): List =
   if js.isNull: return
